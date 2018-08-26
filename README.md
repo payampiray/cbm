@@ -1,5 +1,5 @@
 # cbm
-contains matlab scripts for "computational and behavioral modeling".
+contains matlab scripts for "computational and brain/behavior modeling".
 
 ## Requirements
 MATLAB and its optimization toolbox
