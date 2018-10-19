@@ -522,11 +522,18 @@ if ~opt_paral
     end
 end
 
+tolflag = 1;
+if mean(mean(flag<1))>0.1
+    logging(1,fid,'Optimization failed to satisfy tolgrad for more than 10 percent of subjects.\n');
+    logging(1,fid,'Check the models or consider increasing tolgrad in optimconfigs to 0.01 or 0.1\n');
+    tolflag = .5;
+end
+
 Ainvdiag = cell(K,1);
 logdetA  = nan(K,N);
 for n=1:N
     for k=1:K
-        if flag(k,n)<1 % if no good gradient found (i.e. optimization failed), use the prior values for this subject-model
+        if flag(k,n)<tolflag % if no good gradient found (i.e. optimization failed), use the prior values for this subject-model
             theta_n      = priors(k).mean;
             [logf(k,n)]  = cbm_loggaussian(theta_n',models{k},priors(k),data{n});    
             A{k,n}       = priors(k).precision;
