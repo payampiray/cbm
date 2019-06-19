@@ -1,14 +1,35 @@
-function [qh,r,pmutau,pm,bound,prog]= cbm_hbi_init(flap,hyper,limInf,initialize)
+function [inits,priors]= cbm_hbi_init(flap,hyper,limInf,initialize_r,families)
 % initializes HBI algorithm
 % implemented by Payam Piray, Aug 2018
 %==========================================================================
 
 if nargin<3, limInf = 0; end
-if nargin<4, initialize = 'all_r_1'; end
+if nargin<4, initialize_r = 'all_r_1'; end
+if nargin<5, families = []; end
+
+%--------------------------------------------------------------------------
 
 b = hyper.b;
 v = hyper.v;
 s = hyper.s;
+K = length(flap);
+
+% initialize using fcbm_maps
+cbm_maps = cell(K,1);
+allfiles_map = true;
+for k=1:K
+    fcbm_map = flap{k};
+    if ischar(fcbm_map) % address of a cbm saved by cbm_lap?
+        allfiles_map = allfiles_map && 1;
+        fcbm_map  = load(fcbm_map); cbm_maps{k} = fcbm_map.cbm;
+    elseif isstruct(fcbm_map) % or itself a cbm struct?
+        allfiles_map = allfiles_map && 0;
+        cbm_maps{k}  = fcbm_map;
+    else % or something is wrong
+        error('fcbm_map input has not properly been specified for model %d!',k);
+    end
+end
+%--------------------------------------------------------------------------
 
 bb        = struct('ElogpX',nan,...
                    'ElogpH',nan,'ElogpZ',nan,'Elogpmu',nan,'Elogptau',nan,'Elogpm',0,...
@@ -26,9 +47,9 @@ logdetA  = cell(K,1);
 logf     = cell(K,1);
 D        = nan(K,1);
 a0       = cell(K,1);
-N        = length(flap{1}.output.parameters);
+N        = length(cbm_maps{1}.output.parameters);
 for k    = 1:K
-    cbm_map     = flap{k};
+    cbm_map     = cbm_maps{k};
     logrho{k}   = cbm_map.math.lme;
     logf{k}     = cbm_map.math.loglik;
     a0{k}       = cbm_map.input.prior.mean;
@@ -54,6 +75,17 @@ for k  = 1:K
     sigma{k} = s*ones(size(a{k}));%V0{k};
     nu{k}    = v;
 end
+
+if ~isempty(families)
+    alpha0 = nan(K,1);
+    uf = unique(families);
+    for i=1:length(uf)
+        f = uf(i);
+        nf = sum(families==f);        
+        alpha0(families==f) = 1/nf;
+    end
+end
+
 pmutau   = struct('name','GaussianGamma','a',a,'beta',beta,'nu',nu,'sigma',sigma);
 pm       = struct('name','Dirichlet','limInf',limInf,'alpha',alpha0);
 
@@ -99,7 +131,7 @@ pm.logC    = logC;
 
 %--------------------------------------------------------------------------
 lme = cell2mat(logrho)';
-switch initialize
+switch initialize_r
     case 'all_r_1'
         % initialize with r=1 (i.e. assuming as if zkn = 1)
         r = ones(K,N);
@@ -109,7 +141,9 @@ end
 
 %--------------------------------------------------------------------------
 bound     = struct('bound',bb,'qHZ',[],'qmutau',[],'qm',[]);
-prog      = struct('L',bound.bound.L,'alpha',pm.alpha,'x',nan);
+inits     = struct('qh',qh,'r',r,'bound',bound);
+priors    = struct('hyper',hyper,'pmutau',pmutau,'pm',pm);
+
 end
 
 

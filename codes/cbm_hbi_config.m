@@ -87,8 +87,9 @@ if ischar(arg)
         warning(msg.message);
         valid = 0;        
     end
-    
 elseif arg==1
-    valid = 1;    
+    valid = 1;
+elseif isempty(arg)
+    valid = 1;
 end
 end

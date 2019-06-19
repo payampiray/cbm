@@ -29,8 +29,7 @@ if length(m)~=length(d)
 end
 
 t       = (a(d)-m)./e(d);
-p       = tcdf(t,nk);
-p = 2 * tcdf(-abs(t), nk);
+p       = 2 * tcdf(-abs(t), nk);
 
-stats = struct('tstat',t,'pval',p,'df',nk);
+stats   = struct('tstat',t,'pval',p,'df',nk);
 end

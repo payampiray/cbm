@@ -1,6 +1,9 @@
 function [cbm,cbm0] = cbm_hbi_null(data,fname_cbm)
 % cbm_hbi_null implements hierarchical Bayesian inference (HBI) under the
 % null hypothesis
+%       cbm = cbm_hbi_null(data,fname_cbm)
+% 1st input: data for all subjects
+% 2nd input: the fitted cbm (or its file-address) by cbm_hbi
 % 
 % implemented by Payam Piray, Aug 2018
 %==========================================================================
@@ -35,10 +38,33 @@ if isfield(config,'fname_prog')
     end
 end
 
-cbm0 = cbm_hbi(data,models,fcbm_maps,fname0,config,optimconfigs,isnull);
+%*********
+
+%--------------------------------------------------------------------------
+% save the input structure
+user_input = struct('models',{models},'fcbm_maps',{fcbm_maps},'fname',fname0,...
+                    'config',config,'optimconfigs',optimconfigs);
+
+%--------------------------------------------------------------------------
+% hyper (prior) parameters
+b = 1; v = 0.5; s = 0.01;
+% Note: a0 is the same as the prior mean used in each fcbm_map
+hyper = struct('b',b,'v',v,'s',s);
+isnull = 1;
+
+config = cbm_hbi_config(config);
+[inits,priors]= cbm_hbi_init(fcbm_maps,hyper,isnull,config.initialize);
+
+%--------------------------------------------------------------------------
+% run HBI
+cbm0 = cbm_hbi_hbi(data,user_input,inits,priors);
+%*********
 
 % use cbm0 to compute protected exceedance probability
-cbm.exceedance  = cbm_hbi_exceedance(cbm.math,cbm0.math);
+alpha = cbm.math.qm.alpha;
+L = cbm.math.bound.bound.L;
+L0 = cbm0.math.bound.bound.L;
+cbm.exceedance  = cbm_hbi_exceedance(alpha,L,L0);
 
 % update cbm
 cbm.output.protected_exceedance_prob = cbm.exceedance.pxp;
