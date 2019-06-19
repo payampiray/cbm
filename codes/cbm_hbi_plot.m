@@ -307,9 +307,9 @@ set(gca,'ticklength', [0 0]);
 
 end
 
-function tx = sigmoid(x)
+function tx = sigmoid(x) %#ok<DEFNU>
 tx = 1./(1+exp(-x));
 end
-function tx = none(x)
+function tx = none(x) %#ok<DEFNU>
 tx = x;
 end
