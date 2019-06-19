@@ -13,5 +13,5 @@ see manual.pdf or manual.html
 
 ## Citation
 please cite this manuscript if you use cbm tools.
-Piray P, Dezfouli A, Heskes T, Frank MJ, Daw ND. 2018,
+Piray P, Dezfouli A, Heskes T, Frank MJ, Daw ND. 2019,
 "Hierarchical Bayesian inference for concurrent model fitting and comparison for group studies" PLoS Comp Biol
