@@ -21,15 +21,13 @@ b     = [tau*weight tau*(1-weight) phi beta];
 a1v = data.choice1;
 a2v = data.choice2;
 rv  = data.outcome;
+s2v = data.state2;
 
 missed = a1v==0 | a2v==0 | rv==0;
 a1v(missed)=[];
 a2v(missed)=[];
 rv(missed)=[];
-s2v = nan(length(a2v),1);
-s2v(a2v==1 | a2v==2)=2;
-s2v(a2v==3 | a2v==4)=3;
-a2v(a2v==3 | a2v==4)=a2v(a2v==3 | a2v==4)-2;
+s2v(missed)=[];
 rv (rv==2)=0;
 
 T = length(rv);
