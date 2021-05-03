@@ -55,8 +55,8 @@ d  = length(mu); % number of parameters
 if numel(v)==1, v = v*eye(d); end
 if isvector(v), v = diag(v); end
 if isrow(mu), mu = mu'; end
-A = inv(v);
-prior = struct('mean',mu,'precision',A);
+a = inv(v);
+prior = struct('mean',mu,'precision',a);
 N   = length(data); % number of samples (subjects)
 
 %--------------------------------------------------------------------------
@@ -153,7 +153,7 @@ for n=1:N
             if verbose, fprintf(fid,'No minimum found, use prior values as individual parameters\n'); end
             theta_n   = mu;
             [loglik_n]  = cbm_loggaussian(theta_n',model,prior,dat);
-            A_n       = A;
+            A_n       = a;
             G_n       = nan(1,d);
         else
             cbm     = sprintf(fid,'No minimum found for subject %02d\n',n);
