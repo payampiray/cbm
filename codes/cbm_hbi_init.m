@@ -72,7 +72,14 @@ alpha0  = ones(K,1);
 for k  = 1:K
     a{k}     = a0{k};
     beta{k}  = b;
-    sigma{k} = s*ones(size(a{k}));%V0{k};
+    if ~iscell(s)
+        sigma{k} = s*ones(size(a{k}));%V0{k};
+    else
+        sigma{k} = s{k}; %V0{k};
+        if length(s{k}) ~= length(a{k})
+            error('length of s is not match with that for a for model %d', k);
+        end
+    end
     nu{k}    = v;
 end
 

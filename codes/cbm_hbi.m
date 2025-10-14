@@ -1,4 +1,4 @@
-function cbm = cbm_hbi(data,models,fcbm_maps,fname,config,optimconfigs)
+function cbm = cbm_hbi(data,models,fcbm_maps,fname,config,optimconfigs, hyper_s)
 % cbm_hbi implements hierarchical Bayesian inference (HBI)
 %       cbm = cbm_hbi(data,models,fcbm_maps,fname,config,optimconfigs)
 % 1st input: data for all subjects
@@ -9,6 +9,11 @@ function cbm = cbm_hbi(data,models,fcbm_maps,fname,config,optimconfigs)
 %   see cbm_hbi_config    
 % 6th input: is another struct, which configures optimization algorithm (optional)
 %   see cbm_optim_config
+% 7th input: a cell variable that specifies model-specific (and
+% parameter-specific) s (optional). See Equation 16 of the paper for details 
+% on how this variable is used in the algorithm. In the paper, s is assumed
+% the same constant (0.01) across parameters and models, but this  
+%  to be assumption can be relaxed.
 % output: cbm struct containing the output of HBI
 %   cbm.methid is 'hbi'
 %   cbm.input contains inputs to the cbm_hbi (but not the data)
@@ -44,6 +49,7 @@ function cbm = cbm_hbi(data,models,fcbm_maps,fname,config,optimconfigs)
 if nargin<4, fname= []; end
 if nargin<5, config= []; end
 if nargin<6, optimconfigs = []; end
+if nargin<7, hyper_s = []; end
 
 %--------------------------------------------------------------------------
 % save the input structure
@@ -53,6 +59,9 @@ user_input = struct('models',{models},'fcbm_maps',{fcbm_maps},'fname',fname,...
 %--------------------------------------------------------------------------
 % hyper (prior) parameters
 b = 1; v = 0.5; s = 0.01;
+if ~isempty(hyper_s)
+   s = {hyper_s};
+end
 % Note: a0 is the same as the prior mean used in each fcbm_map
 hyper = struct('b',b,'v',v,'s',s);
 isnull = 0;
