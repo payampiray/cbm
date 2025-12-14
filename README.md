@@ -6,12 +6,15 @@ MATLAB and its optimization toolbox
 (tested with matlab2014b and higher)
 
 ## Installation
-download and add it to your matlab path.
+Download and add it to your matlab path.
 
 ## Manual
-see manual.pdf or manual.html
+See manual.pdf or manual.html
+
+## Python version
+There is a python version of the cbm tools:
+https://github.com/payampiray/cbm_python
 
 ## Citation
 please cite this manuscript if you use cbm tools.
-Piray P, Dezfouli A, Heskes T, Frank MJ, Daw ND. 2019,
-"Hierarchical Bayesian inference for concurrent model fitting and comparison for group studies" PLoS Comp Biol
+Piray et al., "Hierarchical Bayesian inference for concurrent model fitting and comparison for group studies", *PLoS Computational Biology*, 2019.
