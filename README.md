@@ -1,5 +1,5 @@
 # cbm
-contains matlab scripts for "computational and brain/behavior modeling".
+Contains matlab scripts for "computational and brain/behavior modeling".
 
 ## Requirements
 MATLAB and its optimization toolbox
@@ -16,5 +16,5 @@ There is a python version of the cbm tools:
 https://github.com/payampiray/cbm_python
 
 ## Citation
-please cite this manuscript if you use cbm tools.
+Please cite this manuscript if you use cbm tools.
 Piray et al., "Hierarchical Bayesian inference for concurrent model fitting and comparison for group studies", *PLoS Computational Biology*, 2019.
