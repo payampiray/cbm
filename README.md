@@ -16,5 +16,5 @@ There is a python version of the cbm tools:
 https://github.com/payampiray/cbm_python
 
 ## Citation
-Please cite this manuscript if you use cbm tools.
+Please cite this paper if you use cbm tools:
 Piray et al., "Hierarchical Bayesian inference for concurrent model fitting and comparison for group studies", *PLoS Computational Biology*, 2019.
